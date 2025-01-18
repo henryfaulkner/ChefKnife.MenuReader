@@ -1,0 +1,84 @@
+
+name: $(SourceBranchName)-menu-reader-$(Date:yyyyMMdd).$(Rev:r)
+
+trigger:
+  branches:
+    include:
+    - main
+    - release/*
+    - deploy
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  container-registry: chefknife.azurecr.io
+  api-container-name: chefknife.menureader.webapi
+  api-container-tag: $(Build.BuildNumber)
+  api-container: $(container-registry)/$(api-container-name):$(api-container-tag)
+
+stages:
+- stage: BuildAndPublish
+  displayName: Build and Publish ChefKnife.MenuReader
+  jobs:
+  - job: BuildAndPublish
+    displayName: Build and Publish ChefKnife.MenuReader
+
+    variables:
+      buildConfiguration: 'Release'
+
+    steps:
+    - checkout: self
+      persistCredentials: true # Required for git tagging 
+
+    # Build and push Api container
+    - script: | 
+        docker build -f src/ChefKnife.MenuReader.WebAPI/Dockerfile \
+        -t $(api-container) .
+
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'chefknife Azure Container Registry'
+        repository: '$(api-container-name)'
+        command: 'push'
+        tags: '$(api-container-tag)'
+
+- stage: DeployDev
+  displayName: Deploy Development
+  jobs: 
+  - deployment: DeployDev
+    displayName: Deploy ChefKnife.MenuReader to Dev
+    environment: 'Dev'
+    variables:
+    - group: 'Dev - MenuReader'
+    strategy:
+      runOnce:   
+        deploy:
+          steps:
+          - checkout: self
+            persistCredentials: true # Required for git tagging 
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'chefknife Azure Container Registry'
+              command: 'login'
+
+          # Deploy API Container App
+          - task: AzureContainerApps@1
+            displayName: "Deploy API Container App"
+            inputs:
+              azureSubscription: 'Beta(25e7f400-3059-4f84-918e-ece6057029b7)'
+              imageToDeploy: '$(api-container)'
+              containerAppName: 'dev-chefknife-menureader-api'
+              resourceGroup: 'dev-menureader'
+              containerAppEnvironment: 'dev-app-env'
+              environmentVariables: |
+                ASPNETCORE_ENVIRONMENT=dev
+
+          # Copy swagger.json from docker
+          - script: |
+              id=$(docker create $(api-container))
+              docker cp $id:/app/swagger.json ./swagger.json
+              docker rm -v $id
+            displayName: 'Get swagger.json'
