@@ -52,7 +52,7 @@ stages:
     displayName: Deploy ChefKnife.MenuReader to Dev
     environment: 'Dev'
     variables:
-    - group: 'Dev - MenuReader'
+    - group: 'Dev'
     strategy:
       runOnce:   
         deploy:
@@ -69,7 +69,7 @@ stages:
           - task: AzureContainerApps@1
             displayName: "Deploy API Container App"
             inputs:
-              azureSubscription: 'Beta(25e7f400-3059-4f84-918e-ece6057029b7)'
+              azureSubscription: 'ChefKnifeStudiosSC'
               imageToDeploy: '$(api-container)'
               containerAppName: 'menureader-dev-api'
               resourceGroup: 'menureader-dev'
