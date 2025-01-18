@@ -14,6 +14,7 @@ pool:
 
 variables:
   container-registry: chefknife.azurecr.io
+  container-registry-service-connection: 'AzureContainerRegistrySC'
   api-container-name: chefknife.menureader.webapi
   api-container-tag: $(Build.BuildNumber)
   api-container: $(container-registry)/$(api-container-name):$(api-container-tag)
@@ -39,7 +40,7 @@ stages:
 
     - task: Docker@2
       inputs:
-        containerRegistry: 'chefknife Azure Container Registry'
+        containerRegistry: '$(container-registry-service-connection)'
         repository: '$(api-container-name)'
         command: 'push'
         tags: '$(api-container-tag)'
@@ -61,7 +62,7 @@ stages:
 
           - task: Docker@2
             inputs:
-              containerRegistry: 'chefknife Azure Container Registry'
+              containerRegistry: '$(container-registry-service-connection)'
               command: 'login'
 
           # Deploy API Container App
@@ -70,9 +71,9 @@ stages:
             inputs:
               azureSubscription: 'Beta(25e7f400-3059-4f84-918e-ece6057029b7)'
               imageToDeploy: '$(api-container)'
-              containerAppName: 'dev-chefknife-menureader-api'
-              resourceGroup: 'dev-menureader'
-              containerAppEnvironment: 'dev-app-env'
+              containerAppName: 'menureader-dev-api'
+              resourceGroup: 'menureader-dev'
+              containerAppEnvironment: 'menureader-dev-app-env'
               environmentVariables: |
                 ASPNETCORE_ENVIRONMENT=dev
 
