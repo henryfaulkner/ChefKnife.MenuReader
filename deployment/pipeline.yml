@@ -15,7 +15,7 @@ pool:
 variables:
   container-registry: chefknife.azurecr.io
   container-registry-service-connection: 'AzureContainerRegistrySC'
-  api-container-name: chefknife.menureader.webapi
+  api-container-name: chefknife-dev-menureader-webapi
   api-container-tag: $(Build.BuildNumber)
   api-container: $(container-registry)/$(api-container-name):$(api-container-tag)
 
