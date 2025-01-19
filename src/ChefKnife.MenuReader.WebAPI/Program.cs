@@ -6,9 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-var dbConnectionString = builder.Configuration.GetConnectionString("AuditDB");
-if (!string.IsNullOrEmpty(dbConnectionString))
-    builder.Services.ConfigureDataBase(dbConnectionString);
+builder.Services.ConfigureDataBase(builder.Configuration);
 builder.Services.RegisterDataServices();
 
 builder.Services.AddSwagger();

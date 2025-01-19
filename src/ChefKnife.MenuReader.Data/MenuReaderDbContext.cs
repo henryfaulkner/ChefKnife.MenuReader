@@ -29,8 +29,6 @@ public class MenuReaderDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.ConfigureWarnings(warnings =>
-            warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
