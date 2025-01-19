@@ -25,6 +25,6 @@ public class ReadMenuRequestConfiguration : IEntityTypeConfiguration<ReadMenuReq
         builder.Property(x => x.MenuUri)
             .IsRequired();
         builder.Property(x => x.StorageUri);
-        builder.Property(x => x.ModelResultJSON);
+        builder.Property(x => x.ModelResult);
     }
 }

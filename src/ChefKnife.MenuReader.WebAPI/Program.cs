@@ -2,6 +2,7 @@ using ChefKnife.MenuReader.WebAPI;
 using ChefKnife.MenuReader.Data;
 using ChefKnife.MenuReader.Shared.Config;
 using ChefKnife.MenuReader.StorageService;
+using ChefKnife.MenuReader.DocumentProcessorService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,11 @@ builder.Services.RegisterDataServices();
 var menuDumpStorageSection = builder.Configuration.GetSection("Storage:MenuDump");
 builder.Services.RegisterAzureBlobStorage(
     new AzureBlobConfig(menuDumpStorageSection["ConnectionString"], menuDumpStorageSection["ContainerName"])
+);
+
+var documentIntelligenceSection = builder.Configuration.GetSection("DocumentProcessor:DocumentIntelligence");
+builder.Services.RegisterAzureDocumentIntelligence(
+    new AzureDocumentIntelligenceConfig(documentIntelligenceSection["Endpoint"], documentIntelligenceSection["ApiKey"], documentIntelligenceSection["ModelId"])
 );
 
 builder.Services.AddSwagger();

@@ -23,5 +23,5 @@ public record ReadMenuRequest : BaseEntity, IEntity
     public string? StorageUri { get; set; }
 
     // Needs to store JSON response from Azure Document Intelligence Service
-    public string? ModelResultJSON { get; set; }
+    public string? ModelResult { get; set; }
 }

@@ -2,6 +2,6 @@
 
 public interface IStorageService
 {
-    Task<Uri> UploadAsync(string name, byte[] data);
-    Task<byte[]> DownloadAsync(Uri uri);
+    Task<Uri?> UploadAsync(string name, byte[] data, CancellationToken cancellationToken = default);
+    Task<byte[]> DownloadAsync(Uri uri, CancellationToken cancellationToken = default);
 }
