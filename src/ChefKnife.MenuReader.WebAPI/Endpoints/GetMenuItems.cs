@@ -32,6 +32,8 @@ public class GetMenuItems : EndpointBaseAsync
         {
             var res = new List<MenuItemDetail>();
 
+
+
             return this.ToActionResult(Result.Success(res.AsEnumerable()));
         }
         catch (Exception ex)

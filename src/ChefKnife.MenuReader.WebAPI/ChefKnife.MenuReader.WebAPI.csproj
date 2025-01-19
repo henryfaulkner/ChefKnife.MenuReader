@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChefKnife.MenuReader.Core\ChefKnife.MenuReader.Core.csproj" />
+    <ProjectReference Include="..\ChefKnife.MenuReader.Data\ChefKnife.MenuReader.Data.csproj" />
   </ItemGroup>
 
 </Project>
