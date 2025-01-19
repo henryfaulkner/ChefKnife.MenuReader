@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace ChefKnife.MenuReader.Core.Enums;
+namespace ChefKnife.MenuReader.Shared.Enums;
 
 public static class EnumExtensions
 {

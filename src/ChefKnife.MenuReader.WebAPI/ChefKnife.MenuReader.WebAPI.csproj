@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -10,14 +10,19 @@
     <PackageReference Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageReference Include="Ardalis.Result.AspNetCore" Version="10.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChefKnife.MenuReader.Core\ChefKnife.MenuReader.Core.csproj" />
+    <ProjectReference Include="..\ChefKnife.MenuReader.Shared\ChefKnife.MenuReader.Shared.csproj" />
     <ProjectReference Include="..\ChefKnife.MenuReader.Data\ChefKnife.MenuReader.Data.csproj" />
+    <ProjectReference Include="..\ChefKnife.MenuReader.StorageService\ChefKnife.MenuReader.StorageService.csproj" />
   </ItemGroup>
 
 </Project>

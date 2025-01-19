@@ -5,9 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.WebAPI", "src\ChefKnife.MenuReader.WebAPI\ChefKnife.MenuReader.WebAPI.csproj", "{22567A31-C9BE-4C13-AB07-E81AC11FC852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.Core", "src\ChefKnife.MenuReader.Core\ChefKnife.MenuReader.Core.csproj", "{71B271E5-B0E4-42EB-B761-0E5AAC97ACFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.Shared", "src\ChefKnife.MenuReader.Shared\ChefKnife.MenuReader.Shared.csproj", "{71B271E5-B0E4-42EB-B761-0E5AAC97ACFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.Data", "src\ChefKnife.MenuReader.Data\ChefKnife.MenuReader.Data.csproj", "{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.StorageService", "src\ChefKnife.MenuReader.StorageService\ChefKnife.MenuReader.StorageService.csproj", "{CDBFD5EB-1A1E-423A-9BFA-1ACFBEE6FC58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDBFD5EB-1A1E-423A-9BFA-1ACFBEE6FC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDBFD5EB-1A1E-423A-9BFA-1ACFBEE6FC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDBFD5EB-1A1E-423A-9BFA-1ACFBEE6FC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDBFD5EB-1A1E-423A-9BFA-1ACFBEE6FC58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

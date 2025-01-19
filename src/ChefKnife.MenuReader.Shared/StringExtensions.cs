@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ChefKnife.MenuReader.Core;
+namespace ChefKnife.MenuReader.Shared;
 
 public static class StringExtensions
 {

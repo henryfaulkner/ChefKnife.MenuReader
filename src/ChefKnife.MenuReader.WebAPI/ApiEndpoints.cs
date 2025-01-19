@@ -2,5 +2,5 @@
 
 public class ApiEndpoints
 {
-    public const string GetMenuItems = "menu-items";
+    public const string ReadMenu = "read-menu";
 }

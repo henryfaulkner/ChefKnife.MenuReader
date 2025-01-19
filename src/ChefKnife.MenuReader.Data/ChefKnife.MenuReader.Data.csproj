@@ -17,4 +17,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="9.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ChefKnife.MenuReader.Shared\ChefKnife.MenuReader.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
