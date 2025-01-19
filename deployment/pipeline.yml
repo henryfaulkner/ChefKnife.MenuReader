@@ -69,7 +69,7 @@ stages:
           - task: AzureContainerApps@1
             displayName: "Deploy API Container App"
             inputs:
-              azureSubscription: 'ChefKnifeStudiosSC'
+              azureSubscription: '$(container-registry-service-connection)'
               imageToDeploy: '$(api-container)'
               containerAppName: 'menureader-dev-api'
               resourceGroup: 'menureader-dev-rg'
