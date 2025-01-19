@@ -402,3 +402,5 @@ appsettings.machine-*
 
 .idea/
 **/.DS_Store
+
+assets/
