@@ -72,8 +72,8 @@ stages:
               azureSubscription: 'ChefKnifeStudiosSC'
               imageToDeploy: '$(api-container)'
               containerAppName: 'menureader-dev-api'
-              resourceGroup: 'menureader-dev'
-              containerAppEnvironment: 'menureader-dev-app-env'
+              resourceGroup: 'menureader-dev-rg'
+              containerAppEnvironment: 'menureader-dev-ca-env'
               environmentVariables: |
                 ASPNETCORE_ENVIRONMENT=dev
 
