@@ -3,11 +3,34 @@ using ChefKnife.MenuReader.Data;
 using ChefKnife.MenuReader.Shared.Config;
 using ChefKnife.MenuReader.StorageService;
 using ChefKnife.MenuReader.DocumentProcessorService;
+using Azure.Identity;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+if (!string.IsNullOrEmpty(builder.Configuration["KeyVaultUri"]))
+{
+    // Use DefaultAzureCredential for Managed Identity or Service Principal authentication
+    builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["KeyVaultUri"] ?? string.Empty), new DefaultAzureCredential());
+    var keyVaultSecrets = builder.Configuration.AsEnumerable()
+                                       .Where(kvp => kvp.Key.StartsWith("KV-"))
+                                       .Where(kvp => !string.IsNullOrEmpty(kvp.Value)) // Filter out empty values
+                                       .ToList();
+
+    foreach (var kvp in keyVaultSecrets)
+    {
+        // Replace dashes with colons in the key name
+        string adjustedKey = kvp.Key;
+        // Remove KV-, then replace - with :
+        adjustedKey.Remove(0, 3).Replace('-', ':');
+
+        // Manually set the adjusted key-value pair back in the configuration
+        builder.Configuration[adjustedKey] = kvp.Value;
+    }
+}
 
 var cosmosDbSection = builder.Configuration.GetSection("CosmosDB");
 builder.Services.ConfigureDataBase(
