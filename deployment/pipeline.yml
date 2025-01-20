@@ -15,7 +15,7 @@ pool:
 variables:
   container-registry: chefknife.azurecr.io
   container-registry-service-connection: 'AzureContainerRegistrySC'
-  api-container-name: chefknife-dev-menureader-webapi
+  api-container-name: menureader-dev-api
   api-container-tag: $(Build.BuildNumber)
   api-container: $(container-registry)/$(api-container-name):$(api-container-tag)
 
@@ -69,7 +69,7 @@ stages:
           - task: AzureContainerApps@1
             displayName: "Deploy API Container App"
             inputs:
-              azureSubscription: '$(container-registry-service-connection)'
+              azureSubscription: 'ChefKnifeStudiosSC'
               imageToDeploy: '$(api-container)'
               containerAppName: 'menureader-dev-api'
               resourceGroup: 'menureader-dev-rg'
