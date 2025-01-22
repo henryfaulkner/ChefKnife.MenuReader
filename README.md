@@ -1,2 +1,2 @@
 # Menu-Reader
-Menu reader microservice to extract ingredient lists from online menu items.
+Menu reader microservice to extract item and ingredient lists from online menus.
