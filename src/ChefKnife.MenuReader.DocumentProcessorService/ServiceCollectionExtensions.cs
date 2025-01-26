@@ -1,4 +1,4 @@
-﻿using ChefKnife.MenuReader.Shared.Config;
+﻿using ChefKnife.Shared.Config;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

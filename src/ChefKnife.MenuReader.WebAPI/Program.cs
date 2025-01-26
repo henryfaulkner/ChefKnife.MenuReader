@@ -1,6 +1,6 @@
 using ChefKnife.MenuReader.WebAPI;
 using ChefKnife.MenuReader.Data;
-using ChefKnife.MenuReader.Shared.Config;
+using ChefKnife.Shared.Config;
 using ChefKnife.MenuReader.StorageService;
 using ChefKnife.MenuReader.DocumentProcessorService;
 using Azure.Identity;

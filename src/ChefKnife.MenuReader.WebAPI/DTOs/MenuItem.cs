@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChefKnife.MenuReader.Shared.DTOs;
+namespace ChefKnife.MenuReader.WebAPI.DTOs;
 
 public class MenuItem
 {

@@ -3,7 +3,7 @@ using Ardalis.Result.AspNetCore;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using ChefKnife.MenuReader.Shared.DTOs;
+using ChefKnife.MenuReader.WebAPI.DTOs;
 using ChefKnife.MenuReader.Data.Repositories;
 using ChefKnife.MenuReader.Data.Entities;
 using ChefKnife.MenuReader.StorageService;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChefKnife.MenuReader.Shared.DTOs;
+namespace ChefKnife.MenuReader.WebAPI.DTOs;
 
 public class Menu
 {

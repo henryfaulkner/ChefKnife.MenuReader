@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChefKnife.MenuReader.DocumentProcessorService\ChefKnife.MenuReader.DocumentProcessorService.csproj" />
-    <ProjectReference Include="..\ChefKnife.MenuReader.Shared\ChefKnife.MenuReader.Shared.csproj" />
+    <ProjectReference Include="..\ChefKnife.Shared\ChefKnife.Shared.csproj" />
     <ProjectReference Include="..\ChefKnife.MenuReader.Data\ChefKnife.MenuReader.Data.csproj" />
     <ProjectReference Include="..\ChefKnife.MenuReader.StorageService\ChefKnife.MenuReader.StorageService.csproj" />
   </ItemGroup>

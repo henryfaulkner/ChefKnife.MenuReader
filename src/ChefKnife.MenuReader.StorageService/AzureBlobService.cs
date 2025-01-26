@@ -1,4 +1,4 @@
-﻿using ChefKnife.MenuReader.Shared.Config;
+﻿using ChefKnife.Shared.Config;
 using Azure.Storage.Blobs;
 using Azure;
 

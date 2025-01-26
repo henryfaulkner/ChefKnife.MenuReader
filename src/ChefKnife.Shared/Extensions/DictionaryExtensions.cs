@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChefKnife.MenuReader.Shared.Extensions;
+namespace ChefKnife.Shared.Extensions;
 
 public static class DictionaryExtensions
 {

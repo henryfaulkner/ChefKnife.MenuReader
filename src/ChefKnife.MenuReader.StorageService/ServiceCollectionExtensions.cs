@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ChefKnife.MenuReader.Shared.Config;
+using ChefKnife.Shared.Config;
 
 namespace ChefKnife.MenuReader.StorageService;
 

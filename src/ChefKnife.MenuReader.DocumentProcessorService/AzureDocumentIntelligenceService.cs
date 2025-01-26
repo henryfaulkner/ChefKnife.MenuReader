@@ -1,8 +1,8 @@
 ﻿using Azure;
 using Azure.AI.FormRecognizer;
 using Azure.AI.FormRecognizer.Models;
-using ChefKnife.MenuReader.Shared.Config;
-using ChefKnife.MenuReader.Shared.Extensions;
+using ChefKnife.Shared.Config;
+using ChefKnife.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChefKnife.MenuReader.Shared\ChefKnife.MenuReader.Shared.csproj" />
+    <ProjectReference Include="..\ChefKnife.Shared\ChefKnife.Shared.csproj" />
   </ItemGroup>
 
 </Project>

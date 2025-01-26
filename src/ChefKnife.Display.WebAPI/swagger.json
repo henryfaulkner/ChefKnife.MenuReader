@@ -1,0 +1,313 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Display API",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/get-random": {
+      "get": {
+        "tags": [
+          "Display",
+          "MET"
+        ],
+        "summary": ".",
+        "description": ".",
+        "operationId": "GetRandom",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObject"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObject"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ElementMeasurements": {
+        "type": "object",
+        "properties": {
+          "height": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Measurements": {
+        "type": "object",
+        "properties": {
+          "elementName": {
+            "type": "string",
+            "nullable": true
+          },
+          "elementDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "elementMeasurements": {
+            "$ref": "#/components/schemas/ElementMeasurements"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetObject": {
+        "type": "object",
+        "properties": {
+          "objectID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isHighlight": {
+            "type": "boolean"
+          },
+          "accessionNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "accessionYear": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPublicDomain": {
+            "type": "boolean"
+          },
+          "primaryImage": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryImageSmall": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalImages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "constituents": {
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "objectName": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "culture": {
+            "type": "string",
+            "nullable": true
+          },
+          "period": {
+            "type": "string",
+            "nullable": true
+          },
+          "dynasty": {
+            "type": "string",
+            "nullable": true
+          },
+          "reign": {
+            "type": "string",
+            "nullable": true
+          },
+          "portfolio": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistPrefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistDisplayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistDisplayBio": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistSuffix": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistAlphaSort": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistNationality": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistBeginDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistEndDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistGender": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistWikidataURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "artistULANURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "objectDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "objectBeginDate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "objectEndDate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "medium": {
+            "type": "string",
+            "nullable": true
+          },
+          "dimensions": {
+            "type": "string",
+            "nullable": true
+          },
+          "measurements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Measurements"
+            },
+            "nullable": true
+          },
+          "creditLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "geographyType": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "county": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "region": {
+            "type": "string",
+            "nullable": true
+          },
+          "subregion": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true
+          },
+          "locus": {
+            "type": "string",
+            "nullable": true
+          },
+          "excavation": {
+            "type": "string",
+            "nullable": true
+          },
+          "river": {
+            "type": "string",
+            "nullable": true
+          },
+          "classification": {
+            "type": "string",
+            "nullable": true
+          },
+          "rightsAndReproduction": {
+            "type": "string",
+            "nullable": true
+          },
+          "linkResource": {
+            "type": "string",
+            "nullable": true
+          },
+          "metadataDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "repository": {
+            "type": "string",
+            "nullable": true
+          },
+          "objectURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "nullable": true
+          },
+          "objectWikidataURL": {
+            "type": "string",
+            "nullable": true
+          },
+          "isTimelineWork": {
+            "type": "boolean"
+          },
+          "galleryNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -5,13 +5,17 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.WebAPI", "src\ChefKnife.MenuReader.WebAPI\ChefKnife.MenuReader.WebAPI.csproj", "{22567A31-C9BE-4C13-AB07-E81AC11FC852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.Shared", "src\ChefKnife.MenuReader.Shared\ChefKnife.MenuReader.Shared.csproj", "{71B271E5-B0E4-42EB-B761-0E5AAC97ACFE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.Data", "src\ChefKnife.MenuReader.Data\ChefKnife.MenuReader.Data.csproj", "{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.StorageService", "src\ChefKnife.MenuReader.StorageService\ChefKnife.MenuReader.StorageService.csproj", "{CDBFD5EB-1A1E-423A-9BFA-1ACFBEE6FC58}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.MenuReader.DocumentProcessorService", "src\ChefKnife.MenuReader.DocumentProcessorService\ChefKnife.MenuReader.DocumentProcessorService.csproj", "{190B61EC-F292-471E-A095-10FF0CD36C81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.Display.WebAPI", "src\ChefKnife.Display.WebAPI\ChefKnife.Display.WebAPI.csproj", "{244A84EC-1479-4036-8671-F6BF7AC19393}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.HttpService", "src\ChefKnife.HttpService\ChefKnife.HttpService.csproj", "{0378B03F-6B22-4F55-8FFC-3045383EEAB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.Shared", "src\ChefKnife.Shared\ChefKnife.Shared.csproj", "{A3223DD6-5015-460C-A848-BE3954C0921D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +27,6 @@ Global
 		{22567A31-C9BE-4C13-AB07-E81AC11FC852}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22567A31-C9BE-4C13-AB07-E81AC11FC852}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22567A31-C9BE-4C13-AB07-E81AC11FC852}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71B271E5-B0E4-42EB-B761-0E5AAC97ACFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71B271E5-B0E4-42EB-B761-0E5AAC97ACFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71B271E5-B0E4-42EB-B761-0E5AAC97ACFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71B271E5-B0E4-42EB-B761-0E5AAC97ACFE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +39,18 @@ Global
 		{190B61EC-F292-471E-A095-10FF0CD36C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{190B61EC-F292-471E-A095-10FF0CD36C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{190B61EC-F292-471E-A095-10FF0CD36C81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{244A84EC-1479-4036-8671-F6BF7AC19393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{244A84EC-1479-4036-8671-F6BF7AC19393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{244A84EC-1479-4036-8671-F6BF7AC19393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{244A84EC-1479-4036-8671-F6BF7AC19393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0378B03F-6B22-4F55-8FFC-3045383EEAB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0378B03F-6B22-4F55-8FFC-3045383EEAB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0378B03F-6B22-4F55-8FFC-3045383EEAB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0378B03F-6B22-4F55-8FFC-3045383EEAB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3223DD6-5015-460C-A848-BE3954C0921D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3223DD6-5015-460C-A848-BE3954C0921D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3223DD6-5015-460C-A848-BE3954C0921D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3223DD6-5015-460C-A848-BE3954C0921D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

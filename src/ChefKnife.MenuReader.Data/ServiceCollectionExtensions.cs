@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using ChefKnife.MenuReader.Data.Repositories;
-using ChefKnife.MenuReader.Shared.Config;
+using ChefKnife.Shared.Config;
 
 namespace ChefKnife.MenuReader.Data;
 
