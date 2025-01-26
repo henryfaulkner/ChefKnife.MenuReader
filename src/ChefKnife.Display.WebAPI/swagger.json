@@ -10,35 +10,161 @@
     }
   ],
   "paths": {
-    "/get-random": {
+    "/spotify/callback": {
       "get": {
         "tags": [
-          "Display",
-          "MET"
+          "Spotify"
         ],
         "summary": ".",
         "description": ".",
-        "operationId": "GetRandom",
+        "operationId": "Callback",
+        "parameters": [
+          {
+            "name": "Code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MetObject"
+                  "$ref": "#/components/schemas/SpotifyTokensApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MetObject"
+                  "$ref": "#/components/schemas/SpotifyTokensApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MetObject"
+                  "$ref": "#/components/schemas/SpotifyTokensApiResponse"
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/spotify/current-track": {
+      "get": {
+        "tags": [
+          "Spotify"
+        ],
+        "summary": ".",
+        "description": ".",
+        "operationId": "GetCurrentTrack",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentlyPlayingApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentlyPlayingApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentlyPlayingApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/met/get-painting/random": {
+      "get": {
+        "tags": [
+          "MET"
+        ],
+        "summary": ".",
+        "description": ".",
+        "operationId": "GetRandomPainting",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObjectApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObjectApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObjectApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/met/get-sculpture/random": {
+      "get": {
+        "tags": [
+          "MET"
+        ],
+        "summary": ".",
+        "description": ".",
+        "operationId": "GetRandomSculpture",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObjectApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObjectApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetObjectApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spotify/login": {
+      "get": {
+        "tags": [
+          "Spotify"
+        ],
+        "summary": ".",
+        "description": ".",
+        "operationId": "Login",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -46,12 +172,332 @@
   },
   "components": {
     "schemas": {
+      "Actions": {
+        "type": "object",
+        "properties": {
+          "interruptingPlayback": {
+            "type": "boolean"
+          },
+          "pausing": {
+            "type": "boolean"
+          },
+          "resuming": {
+            "type": "boolean"
+          },
+          "seeking": {
+            "type": "boolean"
+          },
+          "skippingNext": {
+            "type": "boolean"
+          },
+          "skippingPrev": {
+            "type": "boolean"
+          },
+          "togglingRepeatContext": {
+            "type": "boolean"
+          },
+          "togglingShuffle": {
+            "type": "boolean"
+          },
+          "togglingRepeatTrack": {
+            "type": "boolean"
+          },
+          "transferringPlayback": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Album": {
+        "type": "object",
+        "properties": {
+          "albumType": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalTracks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "availableMarkets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "externalUrls": {
+            "$ref": "#/components/schemas/ExternalUrls"
+          },
+          "href": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            },
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDatePrecision": {
+            "type": "string",
+            "nullable": true
+          },
+          "restrictions": {
+            "$ref": "#/components/schemas/Restrictions"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Artist"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApiException": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "stackTrace": {
+            "type": "string",
+            "nullable": true
+          },
+          "innerExcpetion": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Artist": {
+        "type": "object",
+        "properties": {
+          "externalUrls": {
+            "$ref": "#/components/schemas/ExternalUrls"
+          },
+          "href": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "uri": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Context": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "href": {
+            "type": "string",
+            "nullable": true
+          },
+          "externalUrls": {
+            "$ref": "#/components/schemas/ExternalUrls"
+          },
+          "uri": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CurrentlyPlaying": {
+        "type": "object",
+        "properties": {
+          "device": {
+            "$ref": "#/components/schemas/DeviceInfo"
+          },
+          "repeatState": {
+            "type": "string",
+            "nullable": true
+          },
+          "shuffleState": {
+            "type": "boolean"
+          },
+          "context": {
+            "$ref": "#/components/schemas/Context"
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "progressMs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPlaying": {
+            "type": "boolean"
+          },
+          "item": {
+            "$ref": "#/components/schemas/Track"
+          },
+          "currentlyPlayingType": {
+            "type": "string",
+            "nullable": true
+          },
+          "actions": {
+            "$ref": "#/components/schemas/Actions"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CurrentlyPlayingApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSuccessful": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CurrentlyPlaying"
+          },
+          "exception": {
+            "$ref": "#/components/schemas/ApiException"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isPrivateSession": {
+            "type": "boolean"
+          },
+          "isRestricted": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "volumePercent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportsVolume": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ElementMeasurements": {
         "type": "object",
         "properties": {
           "height": {
             "type": "number",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExternalIds": {
+        "type": "object",
+        "properties": {
+          "isrc": {
+            "type": "string",
+            "nullable": true
+          },
+          "ean": {
+            "type": "string",
+            "nullable": true
+          },
+          "upc": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExternalUrls": {
+        "type": "object",
+        "properties": {
+          "spotify": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Image": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -304,6 +750,160 @@
           "galleryNumber": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetObjectApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSuccessful": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/MetObject"
+          },
+          "exception": {
+            "$ref": "#/components/schemas/ApiException"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Restrictions": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SpotifyTokens": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SpotifyTokensApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSuccessful": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SpotifyTokens"
+          },
+          "exception": {
+            "$ref": "#/components/schemas/ApiException"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Track": {
+        "type": "object",
+        "properties": {
+          "album": {
+            "$ref": "#/components/schemas/Album"
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Artist"
+            },
+            "nullable": true
+          },
+          "availableMarkets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "discNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "durationMs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "explicit": {
+            "type": "boolean"
+          },
+          "externalIds": {
+            "$ref": "#/components/schemas/ExternalIds"
+          },
+          "externalUrls": {
+            "$ref": "#/components/schemas/ExternalUrls"
+          },
+          "href": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPlayable": {
+            "type": "boolean"
+          },
+          "linkedFrom": {
+            "nullable": true
+          },
+          "restrictions": {
+            "$ref": "#/components/schemas/Restrictions"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "popularity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "previewUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "trackNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "isLocal": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

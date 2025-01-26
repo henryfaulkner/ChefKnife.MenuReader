@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 
-namespace ChefKnife.Display.WebAPI.DTOs;
+namespace ChefKnife.Display.WebAPI.DTOs.MET;
 
 public class MetCollection
 {
-    [JsonProperty("total")] 
+    [JsonProperty("total")]
     public int Total { get; set; }
 
-    [JsonProperty("objectIDs")] 
+    [JsonProperty("objectIDs")]
     public List<long> ObjectIds { get; set; }
 }

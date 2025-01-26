@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.HttpService", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChefKnife.Shared", "src\ChefKnife.Shared\ChefKnife.Shared.csproj", "{A3223DD6-5015-460C-A848-BE3954C0921D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChefKnife,Display", "ChefKnife,Display", "{6FD3DDD2-04DA-4C52-B7F9-45453AF16280}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChefKnife.MenuReader", "ChefKnife.MenuReader", "{D9BA9DCC-2053-4310-98F5-4FA74018AAAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +58,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{22567A31-C9BE-4C13-AB07-E81AC11FC852} = {D9BA9DCC-2053-4310-98F5-4FA74018AAAC}
+		{AFEEFF45-15A0-4722-B8BD-08745BEE8A8E} = {D9BA9DCC-2053-4310-98F5-4FA74018AAAC}
+		{CDBFD5EB-1A1E-423A-9BFA-1ACFBEE6FC58} = {D9BA9DCC-2053-4310-98F5-4FA74018AAAC}
+		{190B61EC-F292-471E-A095-10FF0CD36C81} = {D9BA9DCC-2053-4310-98F5-4FA74018AAAC}
+		{244A84EC-1479-4036-8671-F6BF7AC19393} = {6FD3DDD2-04DA-4C52-B7F9-45453AF16280}
 	EndGlobalSection
 EndGlobal
