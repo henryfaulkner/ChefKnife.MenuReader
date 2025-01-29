@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Display</title>
+    <link href="./styles/css/styles.css" rel="stylesheet" type="text/css" />
+
+    <!-- PhotoViewer import -->
+    <link href="/scripts/photoviewer/dist/photoviewer.min.css" rel="stylesheet">
+    <script src="/scripts/photoviewer/dist/photoviewer.min.js"></script>
+  </head>
+
+  <body onload="updateYear()">
+    <div class="display-container">
+      <div class="display-navbar">
+        <a 
+          href="#" id="login-btn" class="btn btn-success btn-lg"
+        >
+          Log in with Spotify
+        </a>
+      </div>
+      <div id="display-content">
+        
+      </div>
+
+      <footer class="px-4 flex flex-col items-center gap-4 py-5 text-center">
+        <p
+          class="underline underline-offset-4 max-w-[50ch] mb-10"
+          title="This site uses Google Analytics (which adds cookies) to measure the number of users and the countries they are from. I don’t store any of your private identifiable information."
+        >
+          This site uses Google Analytics (which adds cookies) to measure the
+          number of unique visitors.
+        </p>
+        <p>© <span id="current-year"></span> Henry Faulkner. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script>
+      var serverBaseUrl = "https://localhost:7117";
+
+      // PhotoViewer vars
+      var items;
+      var options;
+      var photoviewer = createPhotoViewer();
+
+      // Get the current URL's query parameters
+      const queryString = window.location.search; // Get the query string (e.g., ?key=value&name=example)
+      // Parse the query string
+      const urlParams = new URLSearchParams(queryString);
+
+      setInterval(() => {
+        if (urlParams.get('access_token').length != 0) {
+          useSpotify(urlParams.get('access_token'));
+        } else {
+          useMET();
+        }
+      }, 15000);
+
+      function useSpotify(accessToken) {
+        fetch(`${serverBaseUrl}/spotify/current-track`, {
+          method: 'GET', // or 'POST', 'PUT', etc.
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json', // Optional, depending on your API
+          },
+        })
+          .then(function (response) {
+            // The API call was successful!
+            return response.json();
+          }).then(function (data) {
+            addAsOnlyImage(data.data.item.name, data.data.item.album.images[0].url);
+          }).catch(function (err) {
+            // There was an error
+            console.warn('Something went wrong.', err);
+          });
+      }
+
+      function useMET() {
+        fetch(`${serverBaseUrl}/met/get-sculpture/random`)
+          .then(function (response) {
+            // The API call was successful!
+            return response.json();
+          }).then(function (data) {
+            console.log(data.data.title, data.data.primaryImage)
+            addAsOnlyImage(data.data.title, data.data.primaryImage);
+          }).catch(function (err) {
+            // There was an error
+            console.warn('Something went wrong.', err);
+          });
+      }
+
+      function addAsOnlyImage(title, url) {
+        items.length = 0; // Clear
+        items.push(
+          {
+            src: url,
+            title: title
+          }
+        );
+        photoviewer.jump(0);
+      }
+
+      function createPhotoViewer() {
+        items = [];
+        options = {
+            index: 0,
+            progressiveLoading: false,
+        };
+        return new PhotoViewer(items, options);
+      }
+
+      document.getElementById("login-btn").href = `${serverBaseUrl}/spotify/login`;
+
+      var currentYear = new Date().getFullYear();
+      function updateYear() {
+          document.getElementById("current-year").textContent = currentYear;
+      }
+    </script>
+  </body>
+</html>

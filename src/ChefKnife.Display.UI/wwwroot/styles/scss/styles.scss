@@ -1,0 +1,181 @@
+@import "./utility/utility.scss";
+
+// Bootstrap variable overrides
+$body-bg: $spotify-darkgrey;
+$body-color: $white;
+
+html, 
+body {
+    height: 100%;
+}
+
+@import "../../../../node_modules/bootstrap/scss/bootstrap.scss";
+
+.navBar {
+  width: 100%;
+  height: 25%;
+  position: sticky;
+  background: $spotify-green;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  color: $white;
+  padding: 0 30px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: $default-font;
+
+  h1, h2 {
+    flex-grow: 1;
+    white-space: nowrap;
+    margin-right: 15px;
+  }
+
+  #navBarLogo {
+    max-height: 75px;
+    max-width: 150px;
+  }
+}
+
+.myContainer {
+  position: sticky;
+  background-color: $black;
+  height: inherit;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  @include layout-for(tablet) {
+    max-width: 960px;
+  }
+  @include layout-for(desktop) {
+    max-width: 1140px;
+  }
+}
+
+#content {
+  height: 55%;
+  text-align: center;
+}
+
+footer {
+  height: 20%;
+}
+
+#content>#login, #content>#loggedin, #content>#signup {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  padding-top: 100px;
+  align-items: center;
+}
+
+#content>#created, #content>#unfollowed{
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  align-items: center;
+  text-align: center;
+}
+
+#content h1, #content #unfollowed {
+  width: 66%;
+  margin-bottom: 55px;
+}
+#content #unfollowed {
+  margin-left: 18%;
+}
+
+#signup {
+  max-width: 50%;
+  margin-left: 25%;
+  height: 75%;
+
+  display: flex;
+  flex-direction: column;
+  padding-top: 100px;
+  align-items: center;
+}
+
+.input-group-text {
+  height: 100%;
+  color: black;
+}
+
+.titleLink {
+  color: $white;
+  text-decoration: none;
+
+  &:hover {
+    color: $white;
+  }
+}
+
+#content a, #content button {
+  display:inline-block;
+  vertical-align: middle;
+  margin-bottom: 25px;
+}
+
+.btn-success {
+  background-color: $spotify-lightgreen;
+  font-family: $default-font;
+  width: 36%;
+}
+
+.btn-success:hover {
+  background-color: $spotify-hover-lightgreen;
+}
+
+.btn-danger {
+  background-color: $spotify-red;
+  font-family: $default-font;
+  width: 36%;
+}
+
+.btn-danger:hover {
+  background-color: $spotify-hover-red;
+}
+
+.modal-content {
+  background-color: $spotify-lightgrey;
+}
+
+
+.loading-3 {
+  .loading {
+    background: transparent;
+    width: 2em;
+    height: 80px;
+    position: relative;
+    margin:0 auto;
+  }
+  .loading:after {
+    display: block;
+    content: "";
+    border-radius: 50%;
+    height: 2px;
+    width: 2px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 20px 0 0 4px #333, 14px 14px 0 4px #999, 0 20px 0 4px #999, -14px 14px 0 4px #999, -20px 0 0 4px #999, -14px -14px 0 4px #999, 0 -20px 0 4px #333, 14px -14px 0 4px #111;
+    -webkit-animation: rotate 0.7s steps(8) infinite;
+    -o-animation: rotate 0.7s steps(8) infinite;
+    animation: rotate 0.7s steps(8) infinite;
+  }
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

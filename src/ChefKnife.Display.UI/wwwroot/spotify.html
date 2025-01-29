@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Image Viewer</title>
+        <link rel="icon" href="./assets/icons/Spotify_Icon_RGB_Green.png" />
+    <link href="./styles/css/styles.css" rel="stylesheet" type="text/css" />
+
+        <script src="~/node_modules/photoviewer.js"></script>
+    </head>
+    <body onload="updateYear()">
+        <div class="myContainer">
+            <div class="navBar">
+                <h1><a href="/" class="titleLink">Artists Saved Songs Playlists</a></h1>
+                <img src="./assets/logos/Spotify_Logo_RGB_White.png" id="navBarLogo" />
+            </div>
+            <div id="content">
+                <div id="login">
+                    <a href="#" id="login-btn" class="btn btn-success btn-lg"
+                        >Log in with Spotify</a
+                    >
+                </div>
+
+                <footer class="px-4 flex flex-col items-center gap-4 py-5 text-center">
+                    <p
+                        class="underline underline-offset-4 max-w-[50ch] mb-10"
+                        title="This site uses Google Analytics (which adds cookies) to measure the number of users and the countries they are from. I don’t store any of your private identifiable information."
+                    >
+                        This site uses Google Analytics (which adds cookies) to measure the
+                        number of unique visitors.
+                    </p>
+                    <p>© <span id="current-year"></span> Chef Knife Studios. All rights reserved.</p>
+                </footer>
+            </div>
+        </div>
+
+        <script>
+            var serverBaseUrl = "https://localhost:7117";
+            document.getElementById("login-btn").href = `${serverBaseUrl}/spotify/login`;
+
+            var currentYear = new Date().getFullYear();
+            function updateYear() {
+                document.getElementById("current-year").textContent = currentYear;
+            }
+        </script>
+    </body>
+</html>

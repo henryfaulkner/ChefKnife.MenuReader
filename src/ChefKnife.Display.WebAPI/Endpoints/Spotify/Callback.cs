@@ -59,12 +59,12 @@ public class Callback : EndpointBaseAsync
         {
             if (req.Code == null) 
             {
-                return Redirect($"/#?error=code_mismatch");
+                return Redirect($"{_config["ClientUrl"]}/#?error=code_mismatch");
             }
 
             if (req.State == null)
             {
-                return Redirect($"/#?error=state_mismatch");
+                return Redirect($"{_config["ClientUrl"]}/#?error=state_mismatch");
             }
 
             // Create form data for the request
@@ -82,7 +82,11 @@ public class Callback : EndpointBaseAsync
                 throw new Exception(res?.Exception?.Message ?? (res?.Message ?? "Failed to get access token."));
             }
 
-            return this.ToActionResult(Result.Success(res));
+            var queryParams = HttpUtility.ParseQueryString(string.Empty);
+            queryParams["access_token"] = res.Data.AccessToken;
+            queryParams["refresh_token"] = res.Data.RefreshToken;
+
+            return Redirect($"{_config["ClientUrl"]}?{queryParams}");
         }
         catch (Exception ex)
         {
