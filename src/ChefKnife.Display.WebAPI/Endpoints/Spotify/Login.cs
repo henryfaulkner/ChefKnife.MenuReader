@@ -46,7 +46,7 @@ public class Login : EndpointBaseAsync
             queryParams["response_type"] = "code";
             queryParams["client_id"] = _config["Spotify:ClientId"];
             queryParams["scope"] = scope;
-            queryParams["redirect_uri"] = _config["Spotify:RedirectUri"];
+            queryParams["redirect_uri"] = $"{Request.Scheme}://{Request.Host}{_config["Spotify:RedirectEndpoint"]}";
             queryParams["state"] = state;
 
             string spotifyAuthorizeUrl = $"https://accounts.spotify.com/authorize?{queryParams}";

@@ -71,7 +71,7 @@ public class Callback : EndpointBaseAsync
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("code", req.Code),
-                new KeyValuePair<string, string>("redirect_uri", _config["Spotify:RedirectUri"]),
+                new KeyValuePair<string, string>("redirect_uri", $"{Request.Scheme}://{Request.Host}{_config["Spotify:RedirectEndpoint"]}"),
                 new KeyValuePair<string, string>("grant_type", "authorization_code"),
             });
 

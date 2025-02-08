@@ -19,8 +19,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
@@ -30,5 +28,6 @@ app.UseCors(policy =>
         .AllowAnyMethod()
         .AllowAnyHeader()
 );
+app.UseCorsMiddleware();
 
 app.Run();

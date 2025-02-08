@@ -35,85 +35,91 @@
     </div>
 
     <script>
-      var serverBaseUrl = "https://localhost:7117";
-
-      // PhotoViewer vars
-      var items;
-      var options;
-      var photoviewer = createPhotoViewer();
-
-      // Get the current URL's query parameters
-      const queryString = window.location.search; // Get the query string (e.g., ?key=value&name=example)
-      // Parse the query string
-      const urlParams = new URLSearchParams(queryString);
-
-      setInterval(() => {
-        if (urlParams.get('access_token').length != 0) {
-          useSpotify(urlParams.get('access_token'));
+        var serverBaseUrl;
+        if (window.location.protocol == "http:") {
+            serverBaseUrl = "http://localhost:5268";
         } else {
-          useMET();
+            serverBaseUrl = "https://localhost:7117";
         }
-      }, 15000);
 
-      function useSpotify(accessToken) {
-        fetch(`${serverBaseUrl}/spotify/current-track`, {
-          method: 'GET', // or 'POST', 'PUT', etc.
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json', // Optional, depending on your API
-          },
-        })
-          .then(function (response) {
-            // The API call was successful!
-            return response.json();
-          }).then(function (data) {
-            addAsOnlyImage(data.data.item.name, data.data.item.album.images[0].url);
-          }).catch(function (err) {
-            // There was an error
-            console.warn('Something went wrong.', err);
-          });
-      }
+        // PhotoViewer vars
+        var items;
+        var options;
+        var photoviewer = createPhotoViewer();
 
-      function useMET() {
-        fetch(`${serverBaseUrl}/met/get-sculpture/random`)
-          .then(function (response) {
-            // The API call was successful!
-            return response.json();
-          }).then(function (data) {
-            console.log(data.data.title, data.data.primaryImage)
-            addAsOnlyImage(data.data.title, data.data.primaryImage);
-          }).catch(function (err) {
-            // There was an error
-            console.warn('Something went wrong.', err);
-          });
-      }
+        // Get the current URL's query parameters
+        const queryString = window.location.search; // Get the query string (e.g., ?key=value&name=example)
+        // Parse the query string
+        const urlParams = new URLSearchParams(queryString);
 
-      function addAsOnlyImage(title, url) {
-        items.length = 0; // Clear
-        items.push(
-          {
-            src: url,
-            title: title
-          }
-        );
-        photoviewer.jump(0);
-      }
+        setInterval(() => {
+            if (urlParams && urlParams.get('access_token') && urlParams.get('access_token').length != 0) {
+                useSpotify(urlParams.get('access_token'));
+            } else {
+                useMET();
+            }
+        }, 15000);
 
-      function createPhotoViewer() {
-        items = [];
-        options = {
-            index: 0,
-            progressiveLoading: false,
-        };
-        return new PhotoViewer(items, options);
-      }
+        function useSpotify(accessToken) {
+            fetch(`${serverBaseUrl}/spotify/current-track`, {
+                method: 'GET', // or 'POST', 'PUT', etc.
+                headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json', // Optional, depending on your API
+                },
+            })
+            .then(function (response) {
+                // The API call was successful!
+                return response.json();
+            }).then(function (data) {
+                if (data && data.data) addAsOnlyImage(data.data.item.name, data.data.item.album.images[0].url);
+                else useMET();
+            }).catch(function (err) {
+                // There was an error
+                console.warn('Something went wrong.', err);
+            });
+        }
 
-      document.getElementById("login-btn").href = `${serverBaseUrl}/spotify/login`;
+        function useMET() {
+            fetch(`${serverBaseUrl}/met/get-sculpture/random`)
+            .then(function (response) {
+                // The API call was successful!
+                return response.json();
+            }).then(function (data) {
+                console.log(data.data.title, data.data.primaryImage)
+                addAsOnlyImage(data.data.title, data.data.primaryImage);
+            }).catch(function (err) {
+                // There was an error
+                console.warn('Something went wrong.', err);
+            });
+        }
 
-      var currentYear = new Date().getFullYear();
-      function updateYear() {
-          document.getElementById("current-year").textContent = currentYear;
-      }
+        function addAsOnlyImage(title, url) {
+            items.length = 0; // Clear
+            items.push(
+                {
+                src: url,
+                title: title
+                }
+            );
+            photoviewer.jump(0);
+        }
+
+        function createPhotoViewer() {
+            items = [];
+            options = {
+                index: 0,
+                progressiveLoading: false,
+            };
+            return new PhotoViewer(items, options);
+        }
+
+        document.getElementById("login-btn").href = `${serverBaseUrl}/spotify/login`;
+
+        var currentYear = new Date().getFullYear();
+        function updateYear() {
+            document.getElementById("current-year").textContent = currentYear;
+        }
     </script>
   </body>
 </html>

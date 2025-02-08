@@ -4,8 +4,7 @@ COPY ["./src", "/src"]
 
 EXPOSE 8080
 
-ENV ASPNETCORE_URLS="http://localhost:8080" \
-    ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_URLS="http://0.0.0.0:8080"
 
 WORKDIR /src/ChefKnife.Display.UI
 
