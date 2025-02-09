@@ -90,7 +90,7 @@
         }
       }
     },
-    "/aic/exhibition-artworks/{ExhibitionId}": {
+    "/aic/exhibition-artwork/{ExhibitionId}": {
       "get": {
         "tags": [
           "Art Institute of Chicago"

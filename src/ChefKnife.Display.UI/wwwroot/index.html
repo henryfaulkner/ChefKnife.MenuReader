@@ -32,7 +32,7 @@
                 <label for="met-source">MET Painting Gallery</label>
                 <br />
 
-                <input type="radio" id="met-source" name="art-source" value="MetSculpture" checked />
+                <input type="radio" id="met-source" name="art-source" value="MetSculpture" />
                 <label for="met-source">MET Sculpture Gallery</label>
                 <br />
 
@@ -41,9 +41,11 @@
                 </div>
             </fieldset>
         </form>  
+        <button type="submit" id="add-exhibitions-btn">Add more exhibitions</button> 
 
         <div class="aic-gallery-list">
-
+            <select id="aic-exhibitions" name="aic-exhibitions">
+            </select>
         </div>
       </div>
 
@@ -85,25 +87,24 @@
         var spotifyFlagEl = document.querySelector("#spotify-flag");
 
         var artRadioFormEl = document.querySelector('#art-source-form');
+        var exhibitionListEl = document.querySelector('#aic-exhibitions');
+        var addExhibitionsBtnEl = document.querySelector('#add-exhibitions-btn');
+        var currExhibition;
+        var exhibitionSearchPage = 1;
+        var exhibitionArtworkIndex = 0;
         const artSourcesEnum = Object.freeze({
             MetPainting: 0,
             MetSculpture: 1,
             AicExhibition: 2,
         });
-        artRadioFormEl.addEventListener('change', async (event) => {
-            const artSource = getArtSource(); 
-            switch (artSource)
-            {
-                case 'AicExhibition':
-                    const response = await fetch(`${serverBaseUrl}/aic/exhibitions`);
-                    const data = await response.json();
-                    console.log('data', data);
-                    break;
-                default:
-                    console.warn('useArt could not map your art source selection.')
-                    break;
-            }
+        addAicExhibitions();
+        addExhibitionsBtnEl.addEventListener('click', (event) => {
+            addAicExhibitions();
         });
+        exhibitionListEl.addEventListener('change', async (event) => {
+            setAicExhibitionArtwork();
+        });
+
 
         var photoviewerDialogEl = document.querySelector(".photoviewer-modal");
         var photoviewerLabelEl = document.querySelector("#photoviewer-label");
@@ -154,7 +155,6 @@
             }
             console.log('End useSpotify');
         }
-
 
         async function useArt() {
             var artSource = getArtSource(); 
@@ -213,12 +213,22 @@
 
         async function useAicExhibition() {
             console.log('Call useAicExhibition'); 
-            try {
-                const response = await fetch(`${serverBaseUrl}/aic/exhibition-artwork/5`);
-                const data = await response.json();
-            } catch (err) {
-                // There was an error
-                console.warn('Something went wrong.', err);
+
+            if (!currExhibition) await setAicExhibitionArtwork();
+
+            const exhibition = currExhibition.data[exhibitionArtworkIndex];
+            addAsOnlyImage(exhibition.title, exhibition.imageUrl);
+
+            if (exhibition.artist && exhibition.artist.length > 0)
+                photoviewerLabelHeaderEl.innerHTML = `Artist: ${exhibition.artist}`;
+            if (exhibition.title && exhibition.title.length > 0)
+                photoviewerLabelSubheaderEl.innerHTML = `Title: ${exhibition.title}`;
+
+            exhibitionArtworkIndex += 1;
+
+            // if at end of stored artwork, art either page to more or restart exhibition
+            if (currExhibition.data.length == exhibitionArtworkIndex) {
+                setAicExhibitionArtwork();
             }
             console.log('End useAicExhibition');   
         }
@@ -267,6 +277,53 @@
         var currentYear = new Date().getFullYear();
         function updateYear() {
             document.getElementById("current-year").textContent = currentYear;
+        }
+
+        async function addAicExhibitions() {
+            const endpoint = `${serverBaseUrl}/aic/exhibitions?page=${exhibitionSearchPage}`; 
+            exhibitionSearchPage += 1;
+
+            const response = await fetch(endpoint);
+            const data = await response.json();
+
+            var exhibitions = data.data.data;
+            exhibitions.forEach(x => {
+                exhibitionListEl.innerHTML += `<option value='${x.id}'>${x.title}</option>`;
+            });
+        }
+
+        async function setAicExhibitionArtwork() {
+            try {
+                let page = 1;
+
+                // if at end of stored artwork, art either page to more or restart exhibition
+                if (currExhibition 
+                    && currExhibition.pagination
+                    && currExhibition.data.length == exhibitionArtworkIndex) {
+                    const nextPage = extractPageParamFromUrl(currExhibition.pagination.nextUrl);
+                    if (nextPage != null) page = nextPage; 
+                }
+
+                exhibitionArtworkIndex = 0;
+                const exhibitionId = exhibitionListEl.options[exhibitionListEl.selectedIndex].value;
+                const response = await fetch(`${serverBaseUrl}/aic/exhibition-artwork/${exhibitionId}?page=${page}`);
+                const data = await response.json();
+                currExhibition = data.data;
+            } catch (err) {
+                // There was an error
+                console.warn('Something went wrong.', err);
+            }
+        }
+
+        function extractPageParamFromUrl(url) {
+            // Create a URL object to parse the provided URL
+            const urlObj = new URL(url);
+            
+            // Use the `searchParams` property to get the value of the "page" parameter
+            const pageParam = urlObj.searchParams.get('page');
+            
+            // Return the value if it exists, otherwise return null
+            return pageParam !== null ? pageParam : null;
         }
     </script>
   </body>

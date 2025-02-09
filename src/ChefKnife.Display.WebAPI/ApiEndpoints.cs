@@ -20,7 +20,7 @@ internal class ApiEndpoints
 
     public class AIC
     {
-        public const string GetExhibitionArtworkList = "aic/exhibition-artworks/{ExhibitionId}";
+        public const string GetExhibitionArtworkList = "aic/exhibition-artwork/{ExhibitionId}";
         public const string GetExhibitionList = "aic/exhibitions";
     }
 }
