@@ -90,6 +90,99 @@
         }
       }
     },
+    "/aic/exhibition-artworks/{ExhibitionId}": {
+      "get": {
+        "tags": [
+          "Art Institute of Chicago"
+        ],
+        "summary": ".",
+        "description": ".",
+        "operationId": "GetExhibitionArtworkList",
+        "parameters": [
+          {
+            "name": "ExhibitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AicArtworkIEnumerableAicResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AicArtworkIEnumerableAicResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AicArtworkIEnumerableAicResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aic/exhibitions": {
+      "get": {
+        "tags": [
+          "Art Institute of Chicago"
+        ],
+        "summary": ".",
+        "description": ".",
+        "operationId": "GetExhibitionList",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AicExhibitionIEnumerableAicResponseApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AicExhibitionIEnumerableAicResponseApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AicExhibitionIEnumerableAicResponseApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/met/get-painting/random": {
       "get": {
         "tags": [
@@ -204,6 +297,180 @@
           },
           "transferringPlayback": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AicArtwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "artist": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AicArtworkIEnumerableAicResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AicArtwork"
+            },
+            "nullable": true
+          },
+          "info": {
+            "$ref": "#/components/schemas/AicResponseInfo"
+          },
+          "config": {
+            "$ref": "#/components/schemas/AicResponseConfig"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AicArtworkIEnumerableAicResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSuccessful": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AicArtworkIEnumerableAicResponse"
+          },
+          "exception": {
+            "$ref": "#/components/schemas/ApiException"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AicExhibition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "artworkIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AicExhibitionIEnumerableAicResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AicExhibition"
+            },
+            "nullable": true
+          },
+          "info": {
+            "$ref": "#/components/schemas/AicResponseInfo"
+          },
+          "config": {
+            "$ref": "#/components/schemas/AicResponseConfig"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AicExhibitionIEnumerableAicResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSuccessful": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AicExhibitionIEnumerableAicResponse"
+          },
+          "exception": {
+            "$ref": "#/components/schemas/ApiException"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AicResponseConfig": {
+        "type": "object",
+        "properties": {
+          "iiifUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "websiteUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AicResponseInfo": {
+        "type": "object",
+        "properties": {
+          "licenseText": {
+            "type": "string",
+            "nullable": true
+          },
+          "licenseLinks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -773,6 +1040,36 @@
           },
           "exception": {
             "$ref": "#/components/schemas/ApiException"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nextUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -31,6 +31,9 @@ public interface IHttpService
 
     // Method to set Bearer Authentication credentials
     void SetBearerAuthentication(string token);
+
+    // Add additional header to service clients
+    public void AddHeader(string key, string value);
 }
 
 public class HttpService : IHttpService
@@ -38,6 +41,7 @@ public class HttpService : IHttpService
     readonly IHttpClientFactory _httpClientFactory; 
     string? _basicAuthHeaderValue;
     string? _bearerAuthHeaderValue;
+    Dictionary<string, string> _additionalHeaders = new();
 
     public HttpService(IHttpClientFactory httpClientFactory)
     {
@@ -166,9 +170,17 @@ public class HttpService : IHttpService
         _bearerAuthHeaderValue = token;
     }
 
+    public void AddHeader(string key, string value)
+    {
+        _additionalHeaders[key] = value;
+    }
+
     private HttpClient CreateClient()
     {
         var result = _httpClientFactory.CreateClient();
+
+        result.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+        result.DefaultRequestHeaders.Add("Accept", "application/json");
 
         if (_basicAuthHeaderValue != null)
         {
@@ -178,6 +190,11 @@ public class HttpService : IHttpService
         if (_bearerAuthHeaderValue != null)
         {
             result.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _bearerAuthHeaderValue);
+        }
+
+        foreach (var header in _additionalHeaders)
+        {
+            result.DefaultRequestHeaders.Add(header.Key, header.Value);
         }
 
         return result;

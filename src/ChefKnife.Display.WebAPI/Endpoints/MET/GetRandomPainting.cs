@@ -35,7 +35,7 @@ public class GetRandomPainting : EndpointBaseAsync
 
         try
         {
-            var collection = await _httpService.GetAsync<MetCollection>($"{metCollectionBaseUrl}?medium=Paintings&dateBegin=1950&q=*");
+            var collection = await _httpService.GetAsync<MetCollection>($"{metCollectionBaseUrl}?medium=Paintings&hasImages=true&q=painting");
 
             if (collection?.Data?.ObjectIds == null)
             {

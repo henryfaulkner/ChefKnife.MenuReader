@@ -11,18 +11,48 @@
 
   <body onload="updateYear()">
     <div class="display-container">
-      <div class="display-navbar">
-        <a 
-          href="#" id="login-btn" class="btn btn-success btn-lg"
-        >
-          Log in with Spotify
-        </a>
-      </div>
+        <div class="display-navbar">
+            <a 
+            href="#" id="login-btn" class="btn btn-success btn-lg"
+            >
+            Log in with Spotify
+            </a>
+            <br />
+
+            <input type="checkbox" id="spotify-flag" checked />
+            <label for="spotify-flag">Use Spotify</label>
+        </div>
+
+
       <div id="display-content">
-        
+        <form id="art-source-form">
+            <fieldset class="art-source-radios">
+                <legend>Select Artwork Source:</legend>
+                <input type="radio" id="met-source" name="art-source" value="MetPainting" checked />
+                <label for="met-source">MET Painting Gallery</label>
+                <br />
+
+                <input type="radio" id="met-source" name="art-source" value="MetSculpture" checked />
+                <label for="met-source">MET Sculpture Gallery</label>
+                <br />
+
+                <input type="radio" id="aic-source" name="art-source" value="AicExhibition" />
+                <label for="aic-source">Art Institute of Chicago Exhibitions</label>
+                </div>
+            </fieldset>
+        </form>  
+
+        <div class="aic-gallery-list">
+
+        </div>
       </div>
 
-      <footer class="px-4 flex flex-col items-center gap-4 py-5 text-center">
+      <div id="photoviewer-label" class="photoviewer-modal" style="position: fixed; z-index: 50000; height: fit-content; width: fit-content; bottom: 30px; left: 5px; padding: 8px 8px;">
+        <h1 id="photoviewer-label-header"></h1>
+        <h3 id="photoviewer-label-subheader"></h3>
+      </div>
+
+      <footer class="px-4 flex flex-col items-center gap-4 py-5 text-center" style="display: none;">
         <p
           class="underline underline-offset-4 max-w-[50ch] mb-10"
           title="This site uses Google Analytics (which adds cookies) to measure the number of users and the countries they are from. I don’t store any of your private identifiable information."
@@ -52,49 +82,167 @@
         // Parse the query string
         const urlParams = new URLSearchParams(queryString);
 
-        setInterval(() => {
-            if (urlParams && urlParams.get('access_token') && urlParams.get('access_token').length != 0) {
-                useSpotify(urlParams.get('access_token'));
-            } else {
-                useMET();
+        var spotifyFlagEl = document.querySelector("#spotify-flag");
+
+        var artRadioFormEl = document.querySelector('#art-source-form');
+        const artSourcesEnum = Object.freeze({
+            MetPainting: 0,
+            MetSculpture: 1,
+            AicExhibition: 2,
+        });
+        artRadioFormEl.addEventListener('change', async (event) => {
+            const artSource = getArtSource(); 
+            switch (artSource)
+            {
+                case 'AicExhibition':
+                    const response = await fetch(`${serverBaseUrl}/aic/exhibitions`);
+                    const data = await response.json();
+                    console.log('data', data);
+                    break;
+                default:
+                    console.warn('useArt could not map your art source selection.')
+                    break;
             }
+        });
+
+        var photoviewerDialogEl = document.querySelector(".photoviewer-modal");
+        var photoviewerLabelEl = document.querySelector("#photoviewer-label");
+        var photoviewerLabelHeaderEl = document.querySelector("#photoviewer-label-header");
+        var photoviewerLabelSubheaderEl = document.querySelector("#photoviewer-label-subheader");
+
+        _process();
+        setInterval(() => {
+            _process();
         }, 15000);
 
-        function useSpotify(accessToken) {
-            fetch(`${serverBaseUrl}/spotify/current-track`, {
-                method: 'GET', // or 'POST', 'PUT', etc.
-                headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json', // Optional, depending on your API
-                },
-            })
-            .then(function (response) {
-                // The API call was successful!
-                return response.json();
-            }).then(function (data) {
-                if (data && data.data) addAsOnlyImage(data.data.item.name, data.data.item.album.images[0].url);
-                else useMET();
-            }).catch(function (err) {
-                // There was an error
-                console.warn('Something went wrong.', err);
-            });
+        // This functions as the event loop logic
+        async function _process() {
+            if (spotifyFlagEl.checked && urlParams && urlParams.get('access_token') && urlParams.get('access_token').length != 0) {
+                await useSpotify(urlParams.get('access_token'));
+            } else {
+                await useArt();
+            }
         }
 
-        function useMET() {
-            fetch(`${serverBaseUrl}/met/get-sculpture/random`)
-            .then(function (response) {
-                // The API call was successful!
-                return response.json();
-            }).then(function (data) {
-                console.log(data.data.title, data.data.primaryImage)
-                addAsOnlyImage(data.data.title, data.data.primaryImage);
-            }).catch(function (err) {
+        async function useSpotify(accessToken) {
+            console.log('Call useSpotify');
+            try { 
+                const response = await fetch(`${serverBaseUrl}/spotify/current-track`, {
+                    method: 'GET', // or 'POST', 'PUT', etc.
+                    headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json', // Optional, depending on your API
+                    },
+                })
+
+                const data = await response.json();
+                if (data && data.data && data.data.isPlaying) {
+                    addAsOnlyImage(data.data.item.name, data.data.item.album.images[0].url);
+
+                    const artists = data.data.item.artists.map(x => x.name);
+                    const artistsStr = artists.join(', ');
+                    if (artistsStr.length > 0)
+                        photoviewerLabelHeaderEl.innerHTML = `Artist: ${artistsStr}`;
+                    if (data.data.item.name && data.data.item.name.length > 0)
+                        photoviewerLabelSubheaderEl.innerHTML = `Track: ${data.data.item.name}`;
+                    console.log(`Artist: ${data.data.artistDisplayName}`)
+                    console.log(`Track: ${data.data.item.name}`)
+                } else await useArt();
+            } catch(err) {
                 // There was an error
                 console.warn('Something went wrong.', err);
+            }
+            console.log('End useSpotify');
+        }
+
+
+        async function useArt() {
+            var artSource = getArtSource(); 
+            switch (artSource)
+            {
+                case 'MetPainting':
+                    useMetPainting();
+                    break;
+                case 'MetSculpture':
+                    useMetSculpture();
+                    break;
+                case 'AicExhibition':
+                    useAicExhibition();
+                    break;
+                default:
+                    console.warn('useArt could not map your art source selection.')
+                    break;
+            }
+        }
+
+        async function useMetPainting() {
+            console.log('Call useMET');
+            try {
+                const response = await fetch(`${serverBaseUrl}/met/get-painting/random`);
+                const data = await response.json();
+                addAsOnlyImage(data.data.title, data.data.primaryImage);
+                
+                if (data.data.artistDisplayName && data.data.artistDisplayName.length > 0)
+                    photoviewerLabelHeaderEl.innerHTML = `Artist: ${data.data.artistDisplayName}`;
+                if (data.data.title && data.data.title.length > 0)
+                    photoviewerLabelSubheaderEl.innerHTML = `Title: ${data.data.title}`;
+            } catch(err) {
+                // There was an error
+                console.warn('Something went wrong.', err);
+            }
+            console.log('End useMET');
+        }
+
+        async function useMetSculpture() {
+            console.log('Call useMetSculpture');
+            try {
+                const response = await fetch(`${serverBaseUrl}/met/get-sculpture/random`);
+                const data = await response.json();
+                addAsOnlyImage(data.data.title, data.data.primaryImage);
+                
+                if (data.data.artistDisplayName && data.data.artistDisplayName.length > 0)
+                    photoviewerLabelHeaderEl.innerHTML = `Artist: ${data.data.artistDisplayName}`;
+                if (data.data.title && data.data.title.length > 0)
+                    photoviewerLabelSubheaderEl.innerHTML = `Title: ${data.data.title}`;
+            } catch(err) {
+                // There was an error
+                console.warn('Something went wrong.', err);
+            }
+            console.log('End useMetSculpture');
+        }
+
+        async function useAicExhibition() {
+            console.log('Call useAicExhibition'); 
+            try {
+                const response = await fetch(`${serverBaseUrl}/aic/exhibition-artwork/5`);
+                const data = await response.json();
+            } catch (err) {
+                // There was an error
+                console.warn('Something went wrong.', err);
+            }
+            console.log('End useAicExhibition');   
+        }
+
+        function getArtSource() {
+            const data = new FormData(artRadioFormEl);
+            
+            // Convert FormData to an object for easier inspection
+            const formObject = {};
+            data.forEach((value, key) => {
+                formObject[key] = value;
             });
+
+
+            return formObject['art-source'];
         }
 
         function addAsOnlyImage(title, url) {
+            // if the url remains the same, do not refresh
+            if (items.length > 0) {
+                const currImage = items[0];
+                if (url === currImage.src) return;
+            }
+
             items.length = 0; // Clear
             items.push(
                 {

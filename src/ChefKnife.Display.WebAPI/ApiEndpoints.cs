@@ -17,4 +17,10 @@ internal class ApiEndpoints
 
         public const string GetCurrentTrack = "spotify/current-track";
     }
+
+    public class AIC
+    {
+        public const string GetExhibitionArtworkList = "aic/exhibition-artworks/{ExhibitionId}";
+        public const string GetExhibitionList = "aic/exhibitions";
+    }
 }

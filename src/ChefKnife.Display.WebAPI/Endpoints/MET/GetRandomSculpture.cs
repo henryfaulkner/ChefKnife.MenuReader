@@ -36,7 +36,7 @@ public class GetRandomSculpture : EndpointBaseAsync
         try
         {
 
-            var collection = await _httpService.GetAsync<MetCollection>($"{metCollectionBaseUrl}?medium=Sculpture&dateBegin=1950&q=*");
+            var collection = await _httpService.GetAsync<MetCollection>($"{metCollectionBaseUrl}?medium=Sculpture&hasImages=true&q=sculpture");
 
             if (collection?.Data?.ObjectIds == null)
             {
