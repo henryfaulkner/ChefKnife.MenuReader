@@ -267,8 +267,8 @@
         "tags": [
           "Spotify"
         ],
-        "summary": ".",
-        "description": ".",
+        "summary": "Refresh the Spotify Access Token",
+        "description": "Uses a refresh token to obtain a new access token for Spotify API.",
         "operationId": "RefreshToken",
         "requestBody": {
           "content": {
@@ -1318,6 +1318,19 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Enter access token",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }

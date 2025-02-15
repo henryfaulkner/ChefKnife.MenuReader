@@ -79,11 +79,6 @@
         var options;
         var photoviewer = createPhotoViewer();
 
-        // Get the current URL's query parameters
-        const queryString = window.location.search; // Get the query string (e.g., ?key=value&name=example)
-        // Parse the query string
-        const urlParams = new URLSearchParams(queryString);
-
         var spotifyFlagEl = document.querySelector("#spotify-flag");
 
         var artRadioFormEl = document.querySelector('#art-source-form');
@@ -118,6 +113,11 @@
 
         // This functions as the event loop logic
         async function _process() {
+            // Get the current URL's query parameters
+            const queryString = window.location.search; // Get the query string (e.g., ?key=value&name=example)
+            // Parse the query string
+            const urlParams = new URLSearchParams(queryString);
+
             if (spotifyFlagEl.checked && urlParams && urlParams.get('access_token') && urlParams.get('access_token').length != 0) {
                 await useSpotify(urlParams.get('access_token'));
             } else {
@@ -129,31 +129,80 @@
             console.log('Call useSpotify');
             try { 
                 const response = await fetch(`${serverBaseUrl}/spotify/current-track`, {
-                    method: 'GET', // or 'POST', 'PUT', etc.
+                    method: 'GET', 
                     headers: {
                     'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json', // Optional, depending on your API
+                        'Content-Type': 'application/json', 
                     },
                 })
 
                 const data = await response.json();
+
+                if (data.statusCode === 401) {
+                    await refreshSpotifyAccessToken();
+                    return; // try again next time
+                }
+
                 if (data && data.data && data.data.isPlaying) {
                     addAsOnlyImage(data.data.item.name, data.data.item.album.images[0].url);
 
                     const artists = data.data.item.artists.map(x => x.name);
                     const artistsStr = artists.join(', ');
                     if (artistsStr.length > 0)
-                        photoviewerLabelHeaderEl.innerHTML = `Artist: ${artistsStr}`;
-                    if (data.data.item.name && data.data.item.name.length > 0)
-                        photoviewerLabelSubheaderEl.innerHTML = `Track: ${data.data.item.name}`;
-                    console.log(`Artist: ${data.data.artistDisplayName}`)
-                    console.log(`Track: ${data.data.item.name}`)
+                        photoviewerLabelHeaderEl.innerHTML += `Artist: ${artistsStr}`;
+                    if (data.data.item?.album?.name && data.data.item.album.name.length > 0)
+                        photoviewerLabelSubheaderEl.innerHTML += `Album: ${data.data.item.album.name}<br />`;
+                    if (data.data.item?.name && data.data.item.name.length > 0)
+                        photoviewerLabelSubheaderEl.innerHTML += `Track: ${data.data.item.name}`;
                 } else await useArt();
             } catch(err) {
                 // There was an error
                 console.warn('Something went wrong.', err);
             }
             console.log('End useSpotify');
+        }
+
+        async function refreshSpotifyAccessToken() {
+            let refreshToken = '';
+            const urlObj = new URL(window.location.href);
+            
+            try {
+                refreshToken = urlObj.searchParams.get('refresh_token');
+                if (refreshToken == null) {
+                    console.error("LOCAL SPOTIFY ERROR: Refresh Token search param is null and the Access Token is invalid.");
+                    return;
+                }
+            } catch(err) {
+                console.warn('Something went wrong getting the refresh token.', err);
+                throw err;
+            }
+
+            let data = null;
+            try {
+                const body = { refreshToken };
+                const response = await fetch(`${serverBaseUrl}/spotify/refresh-token`, {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                    headers: {
+                        'Content-Type': 'application/json', 
+                    },
+                });
+                data = await response.json()
+            } catch(err) {
+                console.warn('Something went wrong calling the API.', err);
+                throw err;
+            }
+
+            try {
+                urlObj.searchParams.set('access_token', data.data.accessToken);
+                urlObj.searchParams.set('refresh_token', data.data.refreshToken);
+            } catch(err) {
+                console.warn('Something went wrong setting the access & refresh tokens.', err);
+                throw err;
+            }
+
+            // Update the browser's URL without reloading the page
+            history.replaceState(null, '', urlObj.toString());
         }
 
         async function useArt() {

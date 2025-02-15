@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Net;
 
 namespace ChefKnife.HttpService;
 
@@ -57,15 +58,29 @@ public class HttpService : IHttpService
 
             var response = await client.GetAsync(url);
 
+            if (!response.IsSuccessStatusCode)
+            {
+                // Handle the error response directly.
+                return await CreateErrorCodeResponse<T>(response);
+            }
+
             var content = await response.Content.ReadAsStringAsync();
             var obj = JsonConvert.DeserializeObject<T?>(content);
+
             return new ApiResponse<T?>(obj);
+        }
+        catch (HttpRequestException httpEx)
+        {
+            // Handle specific HTTP errors.
+            return CreateErrorCodeResponse<T>(httpEx);
         }
         catch (Exception ex)
         {
-            return CreateServerErrorApiResponse<T>(ex);
+            // Handle generic errors.
+            return CreateFallbackResponse<T>(ex);
         }
     }
+
 
     // Generic POST request
     public async Task<ApiResponse<Y?>> PostAsync<X, Y>(string url, X data)
@@ -81,13 +96,19 @@ public class HttpService : IHttpService
 
             var response = await client.PostAsync(url, jsonContent);
 
+            if (!response.IsSuccessStatusCode)
+            {
+                // Handle the error response directly.
+                return await CreateErrorCodeResponse<Y>(response);
+            }
+
             var content = await response.Content.ReadAsStringAsync();
             var obj = JsonConvert.DeserializeObject<Y?>(content);
             return new ApiResponse<Y?>(obj);
         }
         catch (Exception ex)
         {
-            return CreateServerErrorApiResponse<Y>(ex);
+            return CreateFallbackResponse<Y>(ex);
         }
     }
 
@@ -98,12 +119,16 @@ public class HttpService : IHttpService
         {
             var client = CreateClient();
 
-            
-
             // Set headers if necessary
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var response = await client.PostAsync(url, formContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                // Handle the error response directly.
+                return await CreateErrorCodeResponse<Y>(response);
+            }
 
             var content = await response.Content.ReadAsStringAsync();
             var obj = JsonConvert.DeserializeObject<Y?>(content);
@@ -112,7 +137,7 @@ public class HttpService : IHttpService
         }
         catch (Exception ex)
         {
-            return CreateServerErrorApiResponse<Y>(ex);
+            return CreateFallbackResponse<Y>(ex);
         }
     }
 
@@ -130,13 +155,19 @@ public class HttpService : IHttpService
 
             var response = await client.PutAsync(url, jsonContent);
 
+            if (!response.IsSuccessStatusCode)
+            {
+                // Handle the error response directly.
+                return await CreateErrorCodeResponse<Y>(response);
+            }
+
             var content = await response.Content.ReadAsStringAsync();
             var obj = JsonConvert.DeserializeObject<Y?>(content);
             return new ApiResponse<Y?>(obj);
         }
         catch (Exception ex)
         {
-            return CreateServerErrorApiResponse<Y>(ex);
+            return CreateFallbackResponse<Y>(ex);
         }
     }
 
@@ -149,13 +180,19 @@ public class HttpService : IHttpService
 
             var response = await client.DeleteAsync(url);
 
+            if (!response.IsSuccessStatusCode)
+            {
+                // Handle the error response directly.
+                return await CreateErrorCodeResponse<T>(response);
+            }
+
             var content = await response.Content.ReadAsStringAsync();
             var obj = JsonConvert.DeserializeObject<T?>(content);
             return new ApiResponse<T?>(obj);
         }
         catch (Exception ex)
         {
-            return CreateServerErrorApiResponse<T>(ex);
+            return CreateFallbackResponse<T>(ex);
         }
     }
 
@@ -200,7 +237,36 @@ public class HttpService : IHttpService
         return result;
     }
 
-    private static ApiResponse<T?> CreateServerErrorApiResponse<T>(Exception? ex = null)
+    private async Task<ApiResponse<T?>> CreateErrorCodeResponse<T>(HttpResponseMessage response)
+    {
+        var errorContent = await response.Content.ReadAsStringAsync();
+        return new ApiResponse<T?>(
+            responseMessage: $"Request failed with status code {(int)response.StatusCode}: {errorContent}",
+            httpStatusCode: (int)response.StatusCode,
+            responseException: new ApiException
+            {
+                Message = errorContent,
+                Code = (int)response.StatusCode,
+                StackTrace = null, // StackTrace is not applicable here.
+                InnerExcpetion = null
+            });
+    }
+
+    private ApiResponse<T?> CreateErrorCodeResponse<T>(HttpRequestException httpEx)
+    {
+        return new ApiResponse<T?>(
+            responseMessage: httpEx.Message,
+            httpStatusCode: (int)httpEx.Data["StatusCode"]!,
+            responseException: new ApiException
+            {
+                Message = httpEx.Message,
+                Code = (int)httpEx.Data["StatusCode"]!,
+                StackTrace = httpEx.StackTrace,
+                InnerExcpetion = httpEx.InnerException?.ToString()
+            });
+    }
+
+    private static ApiResponse<T?> CreateFallbackResponse<T>(Exception? ex = null)
     {
         return new ApiResponse<T?>()
         {
