@@ -103,11 +103,16 @@
             setAicExhibitionArtwork();
         });
 
-
         var photoviewerDialogEl = document.querySelector(".photoviewer-modal");
         var photoviewerLabelEl = document.querySelector("#photoviewer-label");
         var photoviewerLabelHeaderEl = document.querySelector("#photoviewer-label-header");
         var photoviewerLabelSubheaderEl = document.querySelector("#photoviewer-label-subheader");
+
+        const stateEnum = Object.freeze({
+            usingSpotify: 0,
+            usingArt: 1,
+        });
+        let state;
 
         var isFullscreen = false;
 
@@ -126,9 +131,10 @@
             const urlParams = new URLSearchParams(queryString);
 
             if (spotifyFlagEl.checked && urlParams && urlParams.get('access_token') && urlParams.get('access_token').length != 0) {
-                if (isFullscreen) photoviewer.zoomTo(1.6);
+                state = stateEnum.usingSpotify;
                 await useSpotify(urlParams.get('access_token'));
             } else {
+                state = stateEnum.usingArt;
                 await useArt();
             }
 
@@ -316,7 +322,11 @@
             // if the url remains the same, do not refresh
             if (items.length > 0) {
                 const currImage = items[0];
-                if (url === currImage.src) return;
+                if (url === currImage.src) {
+                    if (isFullscreen && state === stateEnum.usingSpotify)
+                        photoviewer.zoomTo(1.4);
+                    return;
+                }
             }
 
             items.length = 0; // Clear
@@ -334,6 +344,12 @@
             options = {
                 index: 0,
                 progressiveLoading: false,
+                callbacks: {
+                    changed: function (context, index) {
+                        if (isFullscreen && state === stateEnum.usingSpotify) 
+                            photoviewer.zoomTo(1.4);
+                    }
+                },
             };
             return new PhotoViewer(items, options);
         }
