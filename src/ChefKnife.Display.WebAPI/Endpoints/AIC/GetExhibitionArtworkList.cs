@@ -42,9 +42,9 @@ public class GetExhibitionArtworkList : EndpointBaseAsync
     {
         var aicExhibitionUrl = $"https://api.artic.edu/api/v1/exhibitions/{req.ExhibitionId}?fields=id,title,artwork_ids&limit=10";
         var aicArtworkUrl = "https://api.artic.edu/api/v1/artworks?fields=id,title,artist_title,image_id";
-
-        if (req.Page.HasValue)
-            aicArtworkUrl = $"{aicArtworkUrl}&page={req.Page}";
+        var pageSize = 10;
+        var page = req.Page ?? 1;
+        
 
         try
         {
@@ -52,8 +52,9 @@ public class GetExhibitionArtworkList : EndpointBaseAsync
             if (exhibitionRes?.Data == null) return this.ToActionResult(Result.Error($"Exhibition Response returned null."));
             var exhibition = exhibitionRes.Data.Data;
             if (exhibition == null) return this.ToActionResult(Result.Error($"Exhibition returned null."));
-
-            string artworkIdCSV = string.Join(",", exhibition.ArtworkIds);
+            
+            var pageArtworkIds = exhibition.ArtworkIds.Skip((page-1) * pageSize).Take(pageSize).ToList();
+            string artworkIdCSV = string.Join(",", pageArtworkIds);
             aicArtworkUrl = $"{aicArtworkUrl}&ids={artworkIdCSV}";
 
             ApiResponse<AicResponse<IEnumerable<AicArtwork>>?> artworkRes = await _httpService.GetAsync<AicResponse<IEnumerable<AicArtwork>>>(aicArtworkUrl);
@@ -67,8 +68,11 @@ public class GetExhibitionArtworkList : EndpointBaseAsync
                     if (artwork.ImageId.HasValue)
                         artwork.ImageUrl = FormatImageUrl(artwork.ImageId.Value);
                 }
+
+                if (exhibition.ArtworkIds.Count() >= (page * pageSize)) artworkRes.Data.Pagination = new Pagination() { NextUrl = $"https://www.google.com?page={page + 1}" };
             }
 
+            
             return this.ToActionResult(Result.Success(artworkRes));
         }
         catch (Exception ex)

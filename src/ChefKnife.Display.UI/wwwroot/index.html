@@ -46,6 +46,8 @@
         <div class="aic-gallery-list">
             <select id="aic-exhibitions" name="aic-exhibitions">
             </select>
+
+            <p id="aic-exhibition-index"></p>
         </div>
       </div>
 
@@ -84,6 +86,7 @@
         var artRadioFormEl = document.querySelector('#art-source-form');
         var exhibitionListEl = document.querySelector('#aic-exhibitions');
         var addExhibitionsBtnEl = document.querySelector('#add-exhibitions-btn');
+        var aicExhibitionIndexEl = document.querySelector('#aic-exhibition-index');
         var currExhibition;
         var exhibitionSearchPage = 1;
         var exhibitionArtworkIndex = 0;
@@ -106,6 +109,8 @@
         var photoviewerLabelHeaderEl = document.querySelector("#photoviewer-label-header");
         var photoviewerLabelSubheaderEl = document.querySelector("#photoviewer-label-subheader");
 
+        var isFullscreen = false;
+
         _process();
         setInterval(() => {
             _process();
@@ -113,16 +118,21 @@
 
         // This functions as the event loop logic
         async function _process() {
+            isFullscreen = !!document.fullscreenElement;
+
             // Get the current URL's query parameters
             const queryString = window.location.search; // Get the query string (e.g., ?key=value&name=example)
             // Parse the query string
             const urlParams = new URLSearchParams(queryString);
 
             if (spotifyFlagEl.checked && urlParams && urlParams.get('access_token') && urlParams.get('access_token').length != 0) {
+                if (isFullscreen) photoviewer.zoomTo(1.6);
                 await useSpotify(urlParams.get('access_token'));
             } else {
                 await useArt();
             }
+
+            aicExhibitionIndexEl.innerHTML = `${exhibitionArtworkIndex} / ${currExhibition?.data?.length ?? 0}`;
         }
 
         async function useSpotify(accessToken) {
@@ -131,7 +141,7 @@
                 const response = await fetch(`${serverBaseUrl}/spotify/current-track`, {
                     method: 'GET', 
                     headers: {
-                    'Authorization': `Bearer ${accessToken}`,
+                        'Authorization': `Bearer ${accessToken}`,
                         'Content-Type': 'application/json', 
                     },
                 })
@@ -148,15 +158,23 @@
 
                     const artists = data.data.item.artists.map(x => x.name);
                     const artistsStr = artists.join(', ');
-                    if (artistsStr.length > 0)
-                        photoviewerLabelHeaderEl.innerHTML += `Artist: ${artistsStr}`;
-                    if (data.data.item?.album?.name && data.data.item.album.name.length > 0)
-                        photoviewerLabelSubheaderEl.innerHTML += `Album: ${data.data.item.album.name}<br />`;
-                    if (data.data.item?.name && data.data.item.name.length > 0)
+
+                    const hasArtist = artistsStr.length > 0;
+                    const hasAlbum = data.data.item?.album?.name && data.data.item.album.name.length > 0;
+                    const hasTrack = data.data.item?.name && data.data.item.name.length > 0;
+
+                    if (hasArtist)
+                        photoviewerLabelHeaderEl.innerHTML = `Artist: ${artistsStr}`;
+
+                    if (hasAlbum && hasTrack) {
+                        photoviewerLabelSubheaderEl.innerHTML = `Album: ${data.data.item.album.name}<br />`;
                         photoviewerLabelSubheaderEl.innerHTML += `Track: ${data.data.item.name}`;
+                    } else if (hasAlbum)
+                        photoviewerLabelSubheaderEl.innerHTML = `Album: ${data.data.item.album.name}`;
+                    else if (hasTrack)
+                        photoviewerLabelSubheaderEl.innerHTML = `Track: ${data.data.item.name}`;
                 } else await useArt();
             } catch(err) {
-                // There was an error
                 console.warn('Something went wrong.', err);
             }
             console.log('End useSpotify');
@@ -236,7 +254,6 @@
                 if (data.data.title && data.data.title.length > 0)
                     photoviewerLabelSubheaderEl.innerHTML = `Title: ${data.data.title}`;
             } catch(err) {
-                // There was an error
                 console.warn('Something went wrong.', err);
             }
             console.log('End useMET');
@@ -345,12 +362,18 @@
             try {
                 let page = 1;
 
-                // if at end of stored artwork, art either page to more or restart exhibition
-                if (currExhibition 
-                    && currExhibition.pagination
-                    && currExhibition.data.length == exhibitionArtworkIndex) {
-                    const nextPage = extractPageParamFromUrl(currExhibition.pagination.nextUrl);
-                    if (nextPage != null) page = nextPage; 
+                // if at end of stored artwork, art either page to more or move to next exhibition
+                if (currExhibition?.data && currExhibition.data.length == exhibitionArtworkIndex) {
+                    let nextPage = null;
+                    if (currExhibition.pagination?.nextUrl) nextPage = extractPageParamFromUrl(currExhibition.pagination.nextUrl);
+                    if (nextPage != null) {
+                        page = nextPage;
+                    } else {
+                        // Move to next exhibition
+                        exhibitionListEl.selectedIndex += 1;
+                        if (exhibitionListEl.selectedIndex == exhibitionListEl.options.length) 
+                            await addAicExhibitions();
+                    }
                 }
 
                 exhibitionArtworkIndex = 0;
