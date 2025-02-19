@@ -179,7 +179,10 @@
                         photoviewerLabelSubheaderEl.innerHTML = `Album: ${data.data.item.album.name}`;
                     else if (hasTrack)
                         photoviewerLabelSubheaderEl.innerHTML = `Track: ${data.data.item.name}`;
-                } else await useArt();
+                } else {
+                  state = stateEnum.usingArt;
+                  await useArt();
+                }
             } catch(err) {
                 console.warn('Something went wrong.', err);
             }
